@@ -103,7 +103,7 @@ Xboard UniProxy `/user` 只返回当前可用用户，不返回总流量和到�
 
 ### 入站绑定
 
-3x-ui 的真实入站由管理员在 3x-ui 面板中提前创建，桥接器只负责把用户绑定到配置文件中的 `sync.inbound_ids`。
+3x-ui 的真实入站由管理员在 3x-ui 面板中提前创建，桥接器只负责把用户绑定到配置文件中的 `xui.node_id` 或 `xui.node_ids`。旧版 `sync.inbound_ids` 仍保留兼容，但不推荐新配置使用。
 
 如果以后需要根据 Xboard `/config` 自动创建入站，可在第二阶段增加入站模板生成逻辑。
 
@@ -136,7 +136,9 @@ cp config.example.json /etc/xboard_link_3x-ui/config.json
 - `xboard.node_type`: Xboard 节点类型
 - `xui.base_url`: 3x-ui 面板地址
 - `xui.api_token`: 3x-ui 设置里的 API Token
-- `sync.inbound_ids`: 要绑定的 3x-ui 入站 ID 列表
+- `xui.node_id`: 要绑定的单个 3x-ui 入站 ID
+- `xui.node_ids`: 要绑定的多个 3x-ui 入站 ID
+- `sync.inbound_ids`: 旧版兼容字段
 - `sync.delete_stale`: 是否删除不再由 Xboard 返回的托管用户
 - `sync.state_file`: 流量状态文件路径
 

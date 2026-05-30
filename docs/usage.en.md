@@ -26,7 +26,7 @@ Create the actual proxy inbound in the 3x-ui panel first. For example, for VLESS
 - Port: for example `12345`
 - SNI, dest, Short ID, public key, and other Reality parameters: use your real inbound settings
 
-After creating the inbound, note its inbound ID. You will use it in `sync.inbound_ids`.
+After creating the inbound, note its inbound ID. This is the ID shown in the 3x-ui inbound list, not the Xboard node ID.
 
 ### Create An API Token
 
@@ -123,6 +123,7 @@ Example:
   "xui": {
     "base_url": "http://127.0.0.1:2053/YOUR_PANEL_BASE_PATH",
     "api_token": "CHANGE_ME_3X_UI_API_TOKEN",
+    "node_id": 1,
     "username": "",
     "password": "",
     "two_factor_code": "",
@@ -130,7 +131,7 @@ Example:
     "insecure_tls": false
   },
   "sync": {
-    "inbound_ids": [1],
+    "inbound_ids": [],
     "interval_seconds": 60,
     "traffic_interval_seconds": 60,
     "delete_stale": true,
@@ -143,6 +144,20 @@ Example:
   }
 }
 ```
+
+`xui.node_id` is the target 3x-ui inbound ID. For example, if the desired inbound shows ID `3` in the 3x-ui inbound list, configure:
+
+```json
+"node_id": 3
+```
+
+If one Xboard node should attach users to multiple 3x-ui inbounds, use:
+
+```json
+"node_ids": [1, 3]
+```
+
+For backward compatibility, `sync.inbound_ids` is still supported, but new configs should use `xui.node_id` or `xui.node_ids`.
 
 Create the state directory:
 

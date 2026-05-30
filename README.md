@@ -36,7 +36,7 @@ Xboard  <--回传流量--  xboard_link_3x-ui  <--读取流量--    3x-ui
 - 安全：Reality/TLS/None
 - 端口：你的代理端口
 
-记下 3x-ui 入站 ID，后面填入 `sync.inbound_ids`。
+记下 3x-ui 入站 ID，后面填入 `xui.node_id`。例如 3x-ui 入站列表里目标入站 ID 是 `3`，就填写 `"node_id": 3`。
 
 ### 2. 创建 3x-ui API Token
 
@@ -80,11 +80,12 @@ cp config.example.json config.json
   "xui": {
     "base_url": "http://127.0.0.1:2053/YOUR_PANEL_BASE_PATH",
     "api_token": "CHANGE_ME_3X_UI_API_TOKEN",
+    "node_id": 1,
     "timeout_seconds": 20,
     "insecure_tls": false
   },
   "sync": {
-    "inbound_ids": [1],
+    "inbound_ids": [],
     "interval_seconds": 60,
     "traffic_interval_seconds": 60,
     "delete_stale": true,
@@ -103,7 +104,9 @@ cp config.example.json config.json
 - `xboard.node_type`: 节点协议，例如 `vless`、`vmess`、`trojan`
 - `xui.base_url`: 3x-ui 面板地址，若有安全路径必须带上
 - `xui.api_token`: 3x-ui API Token
-- `sync.inbound_ids`: 要同步到的 3x-ui 入站 ID 列表
+- `xui.node_id`: 要同步到的 3x-ui 入站 ID
+- `xui.node_ids`: 可选，多个 3x-ui 入站 ID，例如 `[1, 3]`
+- `sync.inbound_ids`: 旧版兼容字段，不推荐新配置继续使用
 
 ### 5. 单次同步测试
 

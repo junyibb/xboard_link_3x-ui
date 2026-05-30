@@ -9,6 +9,7 @@
   "xui": {
     "base_url": "http://127.0.0.1:2053/YOUR_PANEL_BASE_PATH",
     "api_token": "CHANGE_ME_3X_UI_API_TOKEN",
+    "node_id": 1,
     "username": "",
     "password": "",
     "two_factor_code": "",
@@ -16,7 +17,7 @@
     "insecure_tls": false
   },
   "sync": {
-    "inbound_ids": [1],
+    "inbound_ids": [],
     "interval_seconds": 60,
     "traffic_interval_seconds": 60,
     "delete_stale": true,

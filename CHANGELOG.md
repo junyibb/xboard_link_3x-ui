@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Add `xui.node_id` / `xui.node_ids` as the preferred 3x-ui target inbound configuration.
+- Keep `NodeID` / `NodeIDs` compatibility for existing hand-written configs.
+- Keep `sync.inbound_ids` as a legacy fallback.
+- Fix accidental attachment to the wrong 3x-ui inbound when only the legacy default inbound list was used.
+
 ## v0.1.0
 
 Initial open-source version.

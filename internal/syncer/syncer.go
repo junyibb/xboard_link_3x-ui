@@ -98,6 +98,7 @@ func (s *Service) RunOnce(ctx context.Context, includeTraffic bool) error {
 }
 
 func (s *Service) SyncUsers(ctx context.Context, users []xboard.User) error {
+	targetInboundIDs := s.cfg.TargetInboundIDs()
 	existing, err := s.xu.ListClients(ctx)
 	if err != nil {
 		return err
@@ -122,7 +123,7 @@ func (s *Service) SyncUsers(ctx context.Context, users []xboard.User) error {
 	for email, want := range desired {
 		have, ok := existingByEmail[email]
 		if !ok {
-			if err := s.xu.AddClient(ctx, want, s.cfg.Sync.InboundIDs); err != nil {
+			if err := s.xu.AddClient(ctx, want, targetInboundIDs); err != nil {
 				return fmt.Errorf("add client %s: %w", email, err)
 			}
 			created++
@@ -136,7 +137,7 @@ func (s *Service) SyncUsers(ctx context.Context, users []xboard.User) error {
 			updated++
 		}
 
-		toAttach, toDetach := inboundDiff(have.InboundIDs, s.cfg.Sync.InboundIDs)
+		toAttach, toDetach := inboundDiff(have.InboundIDs, targetInboundIDs)
 		if len(toAttach) > 0 {
 			if err := s.xu.AttachClient(ctx, email, toAttach); err != nil {
 				return fmt.Errorf("attach client %s: %w", email, err)
@@ -248,7 +249,7 @@ func (s *Service) clientForUser(user xboard.User) xui.ManagedClient {
 		TgID:       0,
 		LimitIP:    user.DeviceLimit,
 		Comment:    fmt.Sprintf("managed by xboard_link_3x-ui user_id=%d", user.ID),
-		InboundIDs: append([]int(nil), s.cfg.Sync.InboundIDs...),
+		InboundIDs: append([]int(nil), s.cfg.TargetInboundIDs()...),
 	}
 }
 

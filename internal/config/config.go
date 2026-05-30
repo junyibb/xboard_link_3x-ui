@@ -27,6 +27,10 @@ type XboardConfig struct {
 type XUIConfig struct {
 	BaseURL        string `json:"base_url"`
 	APIToken       string `json:"api_token"`
+	NodeID         int    `json:"node_id"`
+	NodeIDCompat   int    `json:"NodeID"`
+	NodeIDs        []int  `json:"node_ids"`
+	NodeIDsCompat  []int  `json:"NodeIDs"`
 	Username       string `json:"username"`
 	Password       string `json:"password"`
 	TwoFactorCode  string `json:"two_factor_code"`
@@ -73,6 +77,12 @@ func (c *Config) setDefaults() {
 	}
 
 	c.XUI.BaseURL = strings.TrimRight(strings.TrimSpace(c.XUI.BaseURL), "/")
+	if c.XUI.NodeID == 0 && c.XUI.NodeIDCompat > 0 {
+		c.XUI.NodeID = c.XUI.NodeIDCompat
+	}
+	if len(c.XUI.NodeIDs) == 0 && len(c.XUI.NodeIDsCompat) > 0 {
+		c.XUI.NodeIDs = c.XUI.NodeIDsCompat
+	}
 	if c.XUI.TimeoutSeconds == 0 {
 		c.XUI.TimeoutSeconds = 20
 	}
@@ -114,8 +124,8 @@ func (c *Config) validate() error {
 	if c.XUI.APIToken == "" && (c.XUI.Username == "" || c.XUI.Password == "") {
 		return errors.New("xui.api_token or xui.username/password is required")
 	}
-	if len(c.Sync.InboundIDs) == 0 {
-		return errors.New("sync.inbound_ids must contain at least one inbound id")
+	if len(c.TargetInboundIDs()) == 0 {
+		return errors.New("xui.node_id, xui.node_ids, or sync.inbound_ids must contain at least one 3x-ui inbound id")
 	}
 	if c.Sync.EmailPrefix == "" {
 		return errors.New("sync.email_prefix cannot be empty")
@@ -143,4 +153,34 @@ func (c SyncConfig) Interval() time.Duration {
 
 func (c SyncConfig) TrafficInterval() time.Duration {
 	return time.Duration(c.TrafficIntervalSeconds) * time.Second
+}
+
+func (c *Config) TargetInboundIDs() []int {
+	return normalizeInboundIDs(c.XUI.TargetInboundIDs(c.Sync.InboundIDs))
+}
+
+func (c XUIConfig) TargetInboundIDs(fallback []int) []int {
+	if len(c.NodeIDs) > 0 {
+		return c.NodeIDs
+	}
+	if c.NodeID > 0 {
+		return []int{c.NodeID}
+	}
+	return fallback
+}
+
+func normalizeInboundIDs(values []int) []int {
+	seen := make(map[int]struct{}, len(values))
+	out := make([]int, 0, len(values))
+	for _, value := range values {
+		if value <= 0 {
+			continue
+		}
+		if _, ok := seen[value]; ok {
+			continue
+		}
+		seen[value] = struct{}{}
+		out = append(out, value)
+	}
+	return out
 }

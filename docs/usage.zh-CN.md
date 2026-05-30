@@ -26,7 +26,7 @@
 - 端口：例如 `12345`
 - SNI/dest/shortId/public key 等参数按实际需求配置
 
-创建后记下入站 ID。
+创建后记下入站 ID。这个 ID 是 3x-ui 入站列表里的 ID，不是 Xboard 的节点 ID。
 
 ### 2. 创建 API Token
 
@@ -121,6 +121,7 @@ nano /etc/xboard_link_3x-ui/config.json
   "xui": {
     "base_url": "http://127.0.0.1:2053/YOUR_PANEL_BASE_PATH",
     "api_token": "CHANGE_ME_3X_UI_API_TOKEN",
+    "node_id": 1,
     "username": "",
     "password": "",
     "two_factor_code": "",
@@ -128,7 +129,7 @@ nano /etc/xboard_link_3x-ui/config.json
     "insecure_tls": false
   },
   "sync": {
-    "inbound_ids": [1],
+    "inbound_ids": [],
     "interval_seconds": 60,
     "traffic_interval_seconds": 60,
     "delete_stale": true,
@@ -141,6 +142,20 @@ nano /etc/xboard_link_3x-ui/config.json
   }
 }
 ```
+
+`xui.node_id` 是 3x-ui 入站 ID。例如目标入站在 3x-ui 入站列表里显示 ID 为 `3`，就填写：
+
+```json
+"node_id": 3
+```
+
+如果一个 Xboard 节点需要同时绑定多个 3x-ui 入站，可以使用：
+
+```json
+"node_ids": [1, 3]
+```
+
+为了兼容旧配置，程序仍然支持 `sync.inbound_ids`，但新配置推荐使用 `xui.node_id` 或 `xui.node_ids`。
 
 创建状态目录：
 
