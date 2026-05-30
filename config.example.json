@@ -1,0 +1,30 @@
+{
+  "xboard": {
+    "base_url": "https://your-xboard.example.com",
+    "token": "CHANGE_ME_XBOARD_SERVER_TOKEN",
+    "node_id": 1,
+    "node_type": "vless",
+    "timeout_seconds": 20
+  },
+  "xui": {
+    "base_url": "http://127.0.0.1:2053/YOUR_PANEL_BASE_PATH",
+    "api_token": "CHANGE_ME_3X_UI_API_TOKEN",
+    "username": "",
+    "password": "",
+    "two_factor_code": "",
+    "timeout_seconds": 20,
+    "insecure_tls": false
+  },
+  "sync": {
+    "inbound_ids": [1],
+    "interval_seconds": 60,
+    "traffic_interval_seconds": 60,
+    "delete_stale": true,
+    "email_prefix": "xboard",
+    "enable_traffic_report": true,
+    "state_file": "./xboard_link_3x-ui-state.json"
+  },
+  "log": {
+    "level": "info"
+  }
+}

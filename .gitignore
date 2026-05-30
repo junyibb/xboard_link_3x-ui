@@ -1,0 +1,9 @@
+/xboard_link_3x-ui
+/xboard_link_3x-ui.exe
+/xboard_link_3x-ui-*
+xboard_link_3x-ui-state.json
+config.json
+*.log
+*.tmp
+bin/
+dist/

@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: ["main", "master"]
+  pull_request:
+    branches: ["main", "master"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.22"
+
+      - name: Format check
+        run: test -z "$(gofmt -l cmd internal)"
+
+      - name: Test
+        run: go test ./...
+
+      - name: Build Linux
+        run: GOOS=linux GOARCH=amd64 go build -o dist/xboard_link_3x-ui-linux-amd64 ./cmd/xboard_link_3x-ui
+
+      - name: Build Windows
+        run: GOOS=windows GOARCH=amd64 go build -o dist/xboard_link_3x-ui-windows-amd64.exe ./cmd/xboard_link_3x-ui
